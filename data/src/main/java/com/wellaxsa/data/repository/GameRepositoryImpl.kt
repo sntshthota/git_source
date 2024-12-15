@@ -1,15 +1,17 @@
 package com.wellaxsa.data.repository
 
-import com.wellaxsa.data.models.Game
+import com.wellaxsa.domain.models.Game
 import com.wellaxsa.data.remote.ApiService
-import com.wellaxsa.data.utils.ResultWrapper
+import com.wellaxsa.domain.utils.ResultWrapper
 import com.wellaxsa.domain.repository.GameRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class GameRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : GameRepository {

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.wellaxsa.domain"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -35,7 +35,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":data"))
     implementation(libs.javax.inject)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -50,3 +49,4 @@ dependencies {
 kapt {
     correctErrorTypes = true
 }
+

@@ -16,9 +16,4 @@ object DomainModule {
     fun provideGamesUseCase(repository: GameRepository): GamesUseCase {
         return GamesUseCase(repository)
     }
-
-    @Provides
-    fun provideGameUseCase(repository: GameRepository): GamesUseCase {
-        return GamesUseCase(repository)
-    }
 }

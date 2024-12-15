@@ -1,4 +1,4 @@
-package com.wellaxsa.domain.di
+package com.wellaxsa.data.di
 
 import com.wellaxsa.data.repository.GameRepositoryImpl
 import com.wellaxsa.domain.repository.GameRepository

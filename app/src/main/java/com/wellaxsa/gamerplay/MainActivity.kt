@@ -6,7 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,6 +18,10 @@ import com.wellaxsa.gamerplay.ui.theme.GamerPlayTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.wellaxsa.gamerplay.ui.features.dashboard.DashboardScreen
 import kotlinx.coroutines.launch
 
 
@@ -37,29 +43,20 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             GamerPlayTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "dashboard") {
+                        composable("dashboard") { DashboardScreen(navController = navController) }
+                        /*composable("dashboardDetail/{gameId}") { backStackEntry ->
+                            val gameId = backStackEntry.arguments?.getString("gameId")
+                            DashboardDetailScreen(gameId)
+                        }*/
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GamerPlayTheme {
-        Greeting("Android")
     }
 }

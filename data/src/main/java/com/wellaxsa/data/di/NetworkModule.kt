@@ -3,7 +3,7 @@ package com.wellaxsa.data.di
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.wellaxsa.data.remote.ApiService
-import com.wellaxsa.data.utils.Constants
+import com.wellaxsa.domain.utils.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

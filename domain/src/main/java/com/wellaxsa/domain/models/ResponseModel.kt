@@ -1,4 +1,4 @@
-package com.wellaxsa.data.models
+package com.wellaxsa.domain.models
 
 import androidx.annotation.Keep
 

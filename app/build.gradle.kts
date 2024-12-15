@@ -16,7 +16,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -43,13 +43,16 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(libs.androidx.core.ktx)
+    implementation(project(":data"))
+    implementation("androidx.core:core-ktx:1.9.0") // Combine ktx dependencies
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    // Consider removing androidx.material if not needed
+    implementation(libs.androidx.material)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -58,9 +61,23 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+    implementation(libs.androidx.navigation.dynamic.features.fragment)
+    androidTestImplementation(libs.androidx.navigation.testing)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    // Remove androidx.foundation as it's likely included in BOM
+    // implementation(libs.androidx.foundation)
+    implementation(libs.coil3.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.accompanist.swiperefresh)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation("androidx.multidex:multidex:2.0.1")
 }
 
 kapt {
