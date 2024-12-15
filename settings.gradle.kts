@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "GamerPlay"
 include(":app")
+include(":data")
+include(":domain")
