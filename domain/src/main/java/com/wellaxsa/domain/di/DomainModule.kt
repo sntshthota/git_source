@@ -1,5 +1,7 @@
 package com.wellaxsa.domain.di
 
+import com.wellaxsa.domain.repository.GameRepository
+import com.wellaxsa.domain.usecase.GamesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -7,16 +9,16 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ViewModelComponent::class) // Use ViewModelComponent for ViewModels
+@InstallIn(ViewModelComponent::class)
 object DomainModule {
 
     @Provides
-    fun provideGetGamesUseCase(repository: GameRepository): GetGamesUseCase {
-        return GetGamesUseCase(repository)
+    fun provideGamesUseCase(repository: GameRepository): GamesUseCase {
+        return GamesUseCase(repository)
     }
 
     @Provides
-    fun provideGetGameUseCase(repository: GameRepository): GetGameUseCase {
-        return GetGameUseCase(repository)
+    fun provideGameUseCase(repository: GameRepository): GamesUseCase {
+        return GamesUseCase(repository)
     }
 }

@@ -5,7 +5,7 @@ import com.wellaxsa.data.utils.ResultWrapper
 import com.wellaxsa.domain.repository.GameRepository
 import javax.inject.Inject
 
-class GetGamesUseCase @Inject constructor(private val repository: GameRepository) {
+class GamesUseCase @Inject constructor(private val repository: GameRepository) {
     suspend operator fun invoke(): ResultWrapper<List<Game>> {
         return repository.getGames()
     }
