@@ -197,7 +197,7 @@ fun GameItem(game: Game, onClick: () -> Unit) {
             )
 
             Text(
-                text = game.title,
+                text = game.title?:"",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .fillMaxWidth()
