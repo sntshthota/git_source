@@ -48,6 +48,10 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 kapt {

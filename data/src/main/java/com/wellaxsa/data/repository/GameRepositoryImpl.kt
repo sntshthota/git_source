@@ -20,8 +20,6 @@ class GameRepositoryImpl @Inject constructor(
         return@withContext try {
             val response = apiService.getGames()
             ResultWrapper.Success(response)
-        } catch (ioException: IOException) {
-            ResultWrapper.Error("Network Error: ${ioException.message}")
         } catch (httpException: HttpException) {
             ResultWrapper.Error("HTTP Error: ${httpException.code()}")
         } catch (e: Exception) {
@@ -33,8 +31,6 @@ class GameRepositoryImpl @Inject constructor(
         return@withContext try {
             val response = apiService.getGame(id)
             ResultWrapper.Success(response)
-        } catch (ioException: IOException) {
-            ResultWrapper.Error("Network Error: ${ioException.message}")
         } catch (httpException: HttpException) {
             ResultWrapper.Error("HTTP Error: ${httpException.code()}")
         } catch (e: Exception) {

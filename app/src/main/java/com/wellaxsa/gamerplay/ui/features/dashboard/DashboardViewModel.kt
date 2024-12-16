@@ -32,7 +32,8 @@ class DashboardViewModel @Inject constructor(
     private val _selectedPlatform = MutableStateFlow<PlatformFilter>(PlatformFilter.All)
     val selectedPlatform: StateFlow<PlatformFilter> = _selectedPlatform
 
-    val availablePlatforms = listOf(PlatformFilter.All, PlatformFilter.PC, PlatformFilter.Browser)
+    val availablePlatforms = listOf(PlatformFilter.All, PlatformFilter.PC, PlatformFilter.Android, PlatformFilter.iOS, PlatformFilter.Playstation, PlatformFilter.Xbox, PlatformFilter.Nintendo)
+    private var originalGamesList = listOf<Game>()
 
     init {
         fetchGames()
@@ -42,7 +43,10 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             when (val result = gamesUseCase()) {
-                is ResultWrapper.Success -> _games.value = result.data
+                is ResultWrapper.Success -> {
+                    originalGamesList = result.data
+                    _games.value = originalGamesList
+                }
                 is ResultWrapper.Error -> _errorMessage.value = result.message
             }
             _isLoading.value = false
@@ -64,11 +68,22 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun filterGames() {
-        val filteredGames = _games.value.filter { game ->
-            val searchTextMatches = searchText.value.isEmpty() || game.title.contains(searchText.value, ignoreCase = true)
-            val platformMatches = selectedPlatform.value == PlatformFilter.All || game.platform.contains(selectedPlatform.value.label, ignoreCase = true)
+        val searchTextValue = searchText.value.trim()
+        val selectedPlatformValue = selectedPlatform.value
+
+        val allGames = originalGamesList
+
+        val filteredGames = allGames.filter { game ->
+            val searchTextMatches = searchTextValue.isEmpty() ||
+                    (game.title?.contains(searchTextValue, ignoreCase = true) == true)
+
+            val platformMatches = selectedPlatformValue == PlatformFilter.All ||
+                    (game.platforms?.contains(selectedPlatformValue.label, ignoreCase = true) == true)
+
             searchTextMatches && platformMatches
         }
         _games.value = filteredGames
     }
+
+
 }
