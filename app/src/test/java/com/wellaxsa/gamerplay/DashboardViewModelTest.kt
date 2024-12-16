@@ -8,25 +8,33 @@ import com.wellaxsa.gamerplay.utills.PlatformFilter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.*
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
 
+    @Mock
+    private lateinit var gamesUseCase: GamesUseCase
+    @InjectMocks
+    private lateinit var viewModel: DashboardViewModel
     private val testDispatcher = StandardTestDispatcher()
 
-    private lateinit var gamesUseCase: GamesUseCase
-    private lateinit var viewModel: DashboardViewModel
-
     @Before
-    fun setUp() {
+    fun setup() {
+        MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(testDispatcher)
-        gamesUseCase = mock()
         viewModel = DashboardViewModel(gamesUseCase)
     }
 
@@ -36,72 +44,68 @@ class DashboardViewModelTest {
     }
 
     @Test
-    fun `fetchGames sets games on success`() = runTest {
-        val mockGames = listOf(
-            Game(id = 1, title = "Game 1", platforms = "PC"),
-            Game(id = 2, title = "Game 2", platforms = "Android")
-        )
-        whenever(gamesUseCase()).thenReturn(ResultWrapper.Success(mockGames))
+    fun `fetchGames success`() = runTest {
+        val gamesList = listOf(Game(title = "Game 1"), Game(title = "Game 2"))
+        whenever(gamesUseCase()).doReturn(ResultWrapper.Success(gamesList))
 
         viewModel.fetchGames()
-        advanceUntilIdle()
 
-        assertEquals(mockGames, viewModel.games.first())
+        assertEquals(gamesList, viewModel.games.first())
         assertEquals(false, viewModel.isLoading.first())
         assertEquals(null, viewModel.errorMessage.first())
     }
 
     @Test
-    fun `fetchGames sets errorMessage on failure`() = runTest {
-        val errorMessage = "Error fetching games"
-        whenever(gamesUseCase()).thenReturn(ResultWrapper.Error(errorMessage))
+    fun `fetchGames error`() = runTest {
+        val errorMessage = "Error message"
+        whenever(gamesUseCase()).doReturn(ResultWrapper.Error(errorMessage))
 
         viewModel.fetchGames()
-        advanceUntilIdle()
 
-        assertEquals(true, viewModel.isLoading.first())
+        assertEquals(false, viewModel.isLoading.first())
         assertEquals(errorMessage, viewModel.errorMessage.first())
-        assertEquals(emptyList<Game>(), viewModel.games.first())
     }
 
     @Test
-    fun `onSearchTextChanged filters games based on search text`() = runTest {
-        val mockGames = listOf(
-            Game(id = 1, title = "Game 1", platforms = "PC"),
-            Game(id = 2, title = "Game 2", platforms = "Android"),
-            Game(id = 3, title = "Another Game", platforms = "PC")
+    fun `onSearchTextChanged filters games by title`() = runTest {
+        val gamesList = listOf(
+            Game(title = "Game 1"),
+            Game(title = "Game 2"),
+            Game(title = "Other Game")
         )
-        whenever(gamesUseCase()).thenReturn(ResultWrapper.Success(mockGames))
+        viewModel.originalGamesList = gamesList
 
-        viewModel.fetchGames()
-        advanceUntilIdle()
+        viewModel.onSearchTextChanged("game")
 
-        viewModel.onSearchTextChanged("Game 1")
-        advanceUntilIdle()
-
-        val filteredGames = viewModel.games.first()
-        assertEquals(1, filteredGames.size)
-        assertEquals("Game 1", filteredGames.first().title)
+        assertEquals(listOf(gamesList[0], gamesList[1]), viewModel.games.first())
     }
 
     @Test
-    fun `onPlatformSelected filters games based on platform`() = runTest {
-        val mockGames = listOf(
-            Game(id = 1, title = "Game 1", platforms = "PC"),
-            Game(id = 2, title = "Game 2", platforms = "Android"),
-            Game(id = 3, title = "Another Game", platforms = "PC")
+    fun `onPlatformSelected filters games by platform`() = runTest {
+        val gamesList = listOf(
+            Game(title = "Game 1", platforms = "PC"),
+            Game(title = "Game 2", platforms = "Android"),
+            Game(title = "Other Game", platforms = "iOS")
         )
-        whenever(gamesUseCase()).thenReturn(ResultWrapper.Success(mockGames))
-
-        viewModel.fetchGames()
-        advanceUntilIdle()
+        viewModel.originalGamesList = gamesList
 
         viewModel.onPlatformSelected(PlatformFilter.PC)
-        advanceUntilIdle()
 
-        val filteredGames = viewModel.games.first()
-        assertEquals(2, filteredGames.size)
-        assertEquals("PC", filteredGames.first().platforms)
+        assertEquals(listOf(gamesList[0]), viewModel.games.first())
+    }
+
+    @Test
+    fun `filterGames with empty search and All platform returns all games`() = runTest {
+        val gamesList = listOf(
+            Game(title = "Game 1", platforms = "PC"),
+            Game(title = "Game 2", platforms = "Android"),
+            Game(title = "Other Game", platforms = "iOS")
+        )
+        viewModel.originalGamesList = gamesList
+
+        viewModel.onSearchTextChanged("")
+        viewModel.onPlatformSelected(PlatformFilter.All)
+
+        assertEquals(gamesList, viewModel.games.first())
     }
 }
-

@@ -1,6 +1,7 @@
 package com.wellaxsa.domain.di
 
 import com.wellaxsa.domain.repository.GameRepository
+import com.wellaxsa.domain.usecase.GameUseCaseImpl
 import com.wellaxsa.domain.usecase.GamesUseCase
 import dagger.Module
 import dagger.Provides
@@ -14,6 +15,7 @@ object DomainModule {
 
     @Provides
     fun provideGamesUseCase(repository: GameRepository): GamesUseCase {
-        return GamesUseCase(repository)
+        return GameUseCaseImpl(repository)
     }
 }
+

@@ -2,6 +2,7 @@ package com.wellaxsa.domain
 
 import com.wellaxsa.domain.models.Game
 import com.wellaxsa.domain.repository.GameRepository
+import com.wellaxsa.domain.usecase.GameUseCaseImpl
 import com.wellaxsa.domain.usecase.GamesUseCase
 import com.wellaxsa.domain.utils.ResultWrapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,7 +25,7 @@ class GameUseCaseImplTest {
 
     @Before
     fun setup() {
-        getGamesUseCase = GamesUseCase(repository)
+        getGamesUseCase = GameUseCaseImpl(repository)
     }
 
     @Test

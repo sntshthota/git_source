@@ -33,7 +33,7 @@ class DashboardViewModel @Inject constructor(
     val selectedPlatform: StateFlow<PlatformFilter> = _selectedPlatform
 
     val availablePlatforms = listOf(PlatformFilter.All, PlatformFilter.PC, PlatformFilter.Android, PlatformFilter.iOS, PlatformFilter.Playstation, PlatformFilter.Xbox, PlatformFilter.Nintendo)
-    private var originalGamesList = listOf<Game>()
+    var originalGamesList = listOf<Game>()
 
     init {
         fetchGames()
@@ -84,6 +84,4 @@ class DashboardViewModel @Inject constructor(
         }
         _games.value = filteredGames
     }
-
-
 }
